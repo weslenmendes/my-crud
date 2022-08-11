@@ -7,7 +7,7 @@ const createUser = async (user: CreateUser) => {
   const { email, password, name, image } = user;
   const passwordEncrypted = encrypt(password);
 
-  return await prisma.users.create({
+  return await prisma.user.create({
     data: {
       name,
       image,
@@ -18,19 +18,19 @@ const createUser = async (user: CreateUser) => {
 };
 
 const getUsers = async () => {
-  return await prisma.users.findMany({});
+  return await prisma.user.findMany({});
 };
 
 const getUserById = async (id: number) => {
-  return await prisma.users.findUnique({ where: { id } });
+  return await prisma.user.findUnique({ where: { id } });
 };
 
 const getUserByEmail = async (email: string) => {
-  return await prisma.users.findUnique({ where: { email } });
+  return await prisma.user.findUnique({ where: { email } });
 };
 
 const removeUser = async (id: number) => {
-  return await prisma.users.delete({ where: { id } });
+  return await prisma.user.delete({ where: { id } });
 };
 
 export { createUser, getUsers, getUserById, getUserByEmail, removeUser };

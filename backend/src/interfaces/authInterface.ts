@@ -1,6 +1,6 @@
-import { Users } from "@prisma/client";
+import { User } from "@prisma/client";
 
-export type CreateUser = Omit<Users, "id">;
+export type CreateUser = Omit<User, "id">;
 
 export interface ICredentials {
   email: string;

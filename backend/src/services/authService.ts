@@ -1,4 +1,4 @@
-import { Users } from "@prisma/client";
+import { User } from "@prisma/client";
 
 import {
   createUser,
@@ -10,7 +10,7 @@ import { ICredentials } from "./../interfaces/authInterface.js";
 import { createToken, isValidToken, decodeToken } from "../utils/tokenUtils.js";
 import { compare } from "../utils/cryptUtils.js";
 
-export type CreateUser = Omit<Users, "id">;
+export type CreateUser = Omit<User, "id">;
 
 const userExistsById = async (id: number) => {
   const userExists = await getUserById(id);
