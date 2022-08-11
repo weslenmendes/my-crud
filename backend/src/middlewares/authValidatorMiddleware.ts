@@ -4,10 +4,10 @@ import { getUserById } from "../repositories/userRepository.js";
 
 import { isValidToken, decodeToken } from "../utils/tokenUtils.js";
 import { generateError } from "../errors/errorGenerator.js";
-import tokenSchema from "../schemas/tokenSchema.js";
+import { tokenSchema } from "../schemas/tokenSchema.js";
 
 async function tokenValidator(req: Request, res: Response, next: NextFunction) {
-  const { error } = tokenSchema.validate(req.headers, {
+  const { error } = tokenSchema.schema.validate(req.headers, {
     abortEarly: false,
   });
 
