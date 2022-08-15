@@ -5,6 +5,7 @@ import {
   removeCrud,
   insertOrUpdateColumn,
   insertOrUpdateRow,
+  getCrudsByUserId,
 } from "../repositories/crudRepository.js";
 import { generateError } from "../errors/errorGenerator.js";
 import { generateCrud } from "../factories/crudFactory.js";
@@ -54,6 +55,16 @@ export const getCrud = async (label: string, userId: number) => {
   const crudExists = await checkIfCrudExists(label, userId);
 
   return crudExists.content;
+};
+
+export const getCruds = async (userId: number) => {
+  await checkIfUserExists(userId);
+
+  const allCruds = await getCrudsByUserId(userId);
+
+  const labels = allCruds.map((crud) => ({ id: crud.id, label: crud.label }));
+
+  return labels;
 };
 
 export const deleteCrud = async (label: string, userId: number) => {

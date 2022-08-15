@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import {
   addCrud,
   getCrud,
+  getCruds,
   deleteCrud,
   addColumn,
   removeColumn as removeColumnCrud,
@@ -27,6 +28,14 @@ export const getCrudByLabel = async (req: Request, res: Response) => {
   const crud = await getCrud(label, +user.id);
 
   res.status(200).send(crud);
+};
+
+export const getAllCrudsByUserId = async (req: Request, res: Response) => {
+  const { user } = res.locals;
+
+  const allCrud = await getCruds(+user.id);
+
+  res.status(200).send(allCrud);
 };
 
 export const removeCrud = async (req: Request, res: Response) => {

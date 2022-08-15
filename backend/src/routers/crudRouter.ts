@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   createCrud,
   getCrudByLabel,
+  getAllCrudsByUserId,
   removeCrud,
   createColumn,
   removeColumn,
@@ -32,6 +33,8 @@ const crudRouter = Router();
 crudRouter.use(authValidator);
 
 crudRouter.get("/:label?", validateSchema(getCrudParamsSchema), getCrudByLabel);
+
+crudRouter.get("/visualize/all", getAllCrudsByUserId);
 
 crudRouter.post("/create", validateSchema(createCrudSchema), createCrud);
 
