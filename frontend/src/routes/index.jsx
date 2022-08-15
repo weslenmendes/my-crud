@@ -5,6 +5,8 @@ import { SignIn } from "../pages/SignIn";
 import { SignUp } from "../pages/SignUp";
 import { Home } from "../pages/Home";
 
+import { Header } from "../components/Header";
+
 import { AuthContext } from "../contexts/AuthContext";
 import { AuthProvider } from "../providers/AuthProvider";
 
@@ -20,7 +22,12 @@ export const AppRoutes = () => {
       return <Navigate to="/sign-in" />;
     }
 
-    return children;
+    return (
+      <>
+        <Header />
+        {children}
+      </>
+    );
   };
 
   return (

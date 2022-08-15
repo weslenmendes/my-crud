@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }) => {
       setItem("@auth_token", data.token);
       setUser(data);
       navigate("/");
+      notify("Usuário logado com sucesso!", "success");
     } catch (e) {
       notify(e.response.data.message, "error");
     }

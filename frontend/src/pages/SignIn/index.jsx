@@ -90,6 +90,7 @@ export const SignIn = (props) => {
             value={form.email}
             onChange={handleChange}
             required={true}
+            showRequired={false}
           />
 
           <Input
@@ -100,6 +101,7 @@ export const SignIn = (props) => {
             value={form.password}
             onChange={handleChange}
             required={true}
+            showRequired={false}
           />
 
           <Button type="submit" disabled={loading}>

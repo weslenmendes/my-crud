@@ -102,6 +102,7 @@ export const SignUp = (props) => {
             onChange={handleChange}
             required={true}
             disabled={loading}
+            showRequired={true}
           />
 
           <Input
@@ -112,6 +113,7 @@ export const SignUp = (props) => {
             value={form.email}
             onChange={handleChange}
             required={true}
+            showRequired={true}
           />
 
           <Input
@@ -131,6 +133,7 @@ export const SignUp = (props) => {
             value={form.password}
             onChange={handleChange}
             required={true}
+            showRequired={true}
           />
 
           <Input
@@ -141,6 +144,7 @@ export const SignUp = (props) => {
             value={form.confirmPassword}
             onChange={handleChange}
             required={true}
+            showRequired={true}
           />
 
           <Button type="submit" disabled={loading}>

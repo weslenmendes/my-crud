@@ -1,10 +1,19 @@
-import styled from "styled-components";
+import {
+  Input as SInput,
+  InputContainer,
+  LabelContainer,
+  Label,
+  Required,
+} from "./styled.js";
 
 export const Input = (props) => {
   return (
     <InputContainer>
-      {props.label && <Label htmlFor={props.id}>{props.label}</Label>}
-      <input
+      <LabelContainer>
+        {props.label && <Label htmlFor={props.id}>{props.label}</Label>}
+        {props.required && props.showRequired && <Required>*</Required>}
+      </LabelContainer>
+      <SInput
         id={props.id}
         type={props.type || "text"}
         name={props.name}
@@ -17,30 +26,3 @@ export const Input = (props) => {
     </InputContainer>
   );
 };
-
-const InputContainer = styled.div`
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  margin: 10px 0;
-
-  input {
-    height: 45px;
-    border-radius: 5px;
-    border: none;
-    margin-top: 10px;
-    padding: 0 10px;
-    outline-color: #487eb0;
-    font-size: 16px;
-
-    &:disabled {
-      pointer-events: none;
-    }
-  }
-`;
-
-const Label = styled.label`
-  font-size: 20px;
-  font-weight: 300;
-`;
