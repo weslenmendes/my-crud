@@ -79,6 +79,11 @@ export const SignUp = (props) => {
     }
   };
 
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    navigate("/sign-in");
+  };
+
   if (loadingContext) {
     return (
       <LoadingContainer>
@@ -155,7 +160,7 @@ export const SignUp = (props) => {
             )}
           </Button>
 
-          <ButtonLine disabled={loading} onClick={() => navigate("/sign-in")}>
+          <ButtonLine disabled={loading} onClick={handleSignIn}>
             <span>Voltar</span>
           </ButtonLine>
         </Form>

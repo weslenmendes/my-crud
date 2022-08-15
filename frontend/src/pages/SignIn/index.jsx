@@ -68,6 +68,11 @@ export const SignIn = (props) => {
     setLoading(false);
   };
 
+  const handleRegister = (e) => {
+    e.preventDefault();
+    navigate("/sign-up");
+  };
+
   if (loadingContext) {
     return (
       <LoadingContainer>
@@ -112,7 +117,7 @@ export const SignIn = (props) => {
             )}
           </Button>
 
-          <ButtonLine disabled={loading} onClick={() => navigate("/sign-up")}>
+          <ButtonLine disabled={loading} onClick={handleRegister}>
             <span>Cadastrar-se</span>
           </ButtonLine>
         </Form>
