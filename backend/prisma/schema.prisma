@@ -13,8 +13,23 @@ model User {
   image     String?
   email     String   @unique
   password  String
+  cruds     Crud[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model Crud {
+  id        Int      @id @default(autoincrement())
+  label     String
+  userId    Int
+  content   Json
+  lastKey   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("cruds")
 }
