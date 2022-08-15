@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 
 import {
   SignIn as SignInService,
-  ValidateToken,
+  ValidateToken as ValidateTokenService,
 } from "../services/authServices.js";
 import { getItem, setItem, removeItem } from "../utils/localStorageUtils.js";
 import { notify } from "../utils/notifyUtils.js";
@@ -26,10 +26,10 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const data = await ValidateToken(token);
+        const response = await ValidateTokenService(token);
         const messageExpected = "Session valid.";
 
-        if (data.message === messageExpected && recoveredUser) {
+        if (response.data.message === messageExpected && recoveredUser) {
           setUser(recoveredUser);
         } else {
           SignOut();
@@ -44,12 +44,15 @@ export const AuthProvider = ({ children }) => {
 
   const SignIn = async (email, password) => {
     try {
-      const data = await SignInService(email, password);
-      setItem("@auth", data);
+      const response = await SignInService(email, password);
+      const { data } = response;
+
+      setItem("@auth", { ...data });
       setItem("@auth_token", data.token);
       setUser(data);
+      navigate("/");
     } catch (e) {
-      notify(e.message, "error");
+      notify(e.response.data.message, "error");
     }
   };
 

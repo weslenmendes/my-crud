@@ -1,21 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Input } from "../../components/Input";
 import { Loading } from "../../components/Loading";
 
 import {
-  Button,
   Container,
-  Form,
   FormContainer,
+  Form,
   SubTitle,
+  Button,
   ButtonLine,
+  LoadingContainer,
+  LoadingSubtitle,
 } from "./styled.js";
 
 import { SignUpSchema } from "../../schemas/authSchema.js";
 
 import { SignUp as SignUpService } from "../../services/authServices.js";
+
+import { AuthContext } from "../../contexts/AuthContext";
 
 import { notify } from "../../utils/notifyUtils.js";
 
@@ -30,7 +34,15 @@ const initialForm = {
 export const SignUp = (props) => {
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
+  const { user, loading: loadingContext } = useContext(AuthContext);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -58,6 +70,7 @@ export const SignUp = (props) => {
 
     try {
       await SignUpService({ ...form });
+      notify("Usuário criado com sucesso!", "success");
       navigate("/sign-in");
     } catch (e) {
       notify(e.response.data.message, "error");
@@ -65,6 +78,15 @@ export const SignUp = (props) => {
       setLoading(false);
     }
   };
+
+  if (loadingContext) {
+    return (
+      <LoadingContainer>
+        <Loading height={"100"} width={"100"} color="#e3e3e3" />
+        <LoadingSubtitle>Carregando...</LoadingSubtitle>
+      </LoadingContainer>
+    );
+  }
 
   return (
     <Container>

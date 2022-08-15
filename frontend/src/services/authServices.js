@@ -21,5 +21,7 @@ export const SignUp = async ({
 };
 
 export const ValidateToken = async (token) => {
-  return api.get("/validate", { Authorization: `Bearer ${token}` });
+  return api.get("/validate", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 };
