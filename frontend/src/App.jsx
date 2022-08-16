@@ -5,11 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
-    <>
+    <main>
       <GlobalStyle />
       <AppRoutes />
       <ToastContainer />
-    </>
+    </main>
   );
 }
 
