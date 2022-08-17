@@ -9,6 +9,8 @@ const customStyles = {
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
     backgroundColor: "#e3e3e3",
+    overflowY: "scroll",
+    maxHeight: "600px",
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",

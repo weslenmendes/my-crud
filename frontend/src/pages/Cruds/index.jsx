@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import swal from "sweetalert2";
@@ -12,6 +12,7 @@ import {
   updateRow,
   deleteRow,
 } from "../../services/crudServices.js";
+import { BASE_URL } from "../../services/api.js";
 
 import { Table } from "../../components/Table";
 import { Modal } from "../../components/Modal";
@@ -23,6 +24,8 @@ import {
   CreateRowSchema,
 } from "../../schemas/crudSchema.js";
 
+import { AuthContext } from "../../contexts/AuthContext.jsx";
+
 import {
   Container,
   Subtitle,
@@ -31,6 +34,13 @@ import {
   Button,
   ButtonCrud,
   Spacer,
+  InfosTitle,
+  InfosContent,
+  InfosBody,
+  InfosText,
+  InfosNotice,
+  InfosSend,
+  FixedHeader,
 } from "./styled.js";
 
 import { formatColumns } from "../../utils/formatUtils.js";
@@ -54,6 +64,7 @@ export const Cruds = (props) => {
   const [row, setRow] = useState({});
   const navigate = useNavigate();
   const { label } = useParams();
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     if (label) {
@@ -83,6 +94,18 @@ export const Cruds = (props) => {
       })();
     }
   }, [label, reload]);
+
+  const getColumns = () => {
+    return crud.columns
+      .map((column) => {
+        if (column.title === "Actions" || column.title === "id") return;
+        return {
+          ...column,
+          title: column.title,
+        };
+      })
+      .filter((column) => column);
+  };
 
   const handleOpenModal = () => {
     setName("");
@@ -268,6 +291,13 @@ export const Cruds = (props) => {
     }
   };
 
+  const handleShowInfos = () => {
+    const baseUrl = BASE_URL;
+    setModalType("Informações");
+
+    handleOpenModal();
+  };
+
   const editRow = async () => {
     try {
       const rowData = { ...formEditRow };
@@ -349,6 +379,93 @@ export const Cruds = (props) => {
       );
     }
 
+    if (modalType === "Informações") {
+      const columns = getColumns();
+
+      const objectToSend = columns.reduce((acc, curr) => {
+        acc[curr.title] = "string";
+        return acc;
+      }, {});
+
+      return (
+        <>
+          <FixedHeader>
+            <ModalSubtitle>
+              {modalType}
+
+              <IoMdClose
+                width={50}
+                height={50}
+                title="Fechar"
+                onClick={handleOpenModal}
+              />
+            </ModalSubtitle>
+          </FixedHeader>
+
+          <InfosBody>
+            <InfosTitle>
+              GET <span>/cruds</span>
+            </InfosTitle>
+            <InfosNotice>O usuário precisa de um token</InfosNotice>
+            <InfosText>
+              Retorna todas as tabelas cadastradas no sistema.
+            </InfosText>
+            <Spacer height={"20"} />
+
+            <InfosTitle>
+              GET <span>/cruds/:label</span>
+            </InfosTitle>
+            <InfosNotice>O usuário precisa de um token</InfosNotice>
+            <InfosText>
+              Retorna os dados da tabela de {label || "algo"}.
+            </InfosText>
+            <InfosContent>{`${BASE_URL}/cruds/${label}`}</InfosContent>
+            <Spacer height={"20"} />
+
+            <InfosTitle>
+              POST <span>/cruds/create/row</span>
+            </InfosTitle>
+            <InfosNotice>O usuário precisa de um token</InfosNotice>
+            <InfosText>Cria uma linha na tabela.</InfosText>
+            <InfosContent>{`${BASE_URL}/cruds/${label}`}</InfosContent>
+            <InfosNotice>Body</InfosNotice>
+            <InfosSend>
+              {`{
+                  "label": "string"
+              }`}
+            </InfosSend>
+            <Spacer height={"20"} />
+
+            <InfosTitle>
+              PUT <span>cruds/update/row/:rowId</span>
+            </InfosTitle>
+            <InfosNotice>O usuário precisa de um token</InfosNotice>
+            <InfosText>Atualiza uma linha da tabela.</InfosText>
+            <InfosContent>{`${BASE_URL}/cruds/${label}`}</InfosContent>
+            <InfosNotice>Body</InfosNotice>
+            <InfosSend>
+              {`{\n
+                  "label": ${label},\n
+                  "rowData": "${JSON.stringify(objectToSend)}"
+              }`}
+            </InfosSend>
+            <Spacer height={"20"} />
+
+            <InfosTitle>
+              DELETE <span>cruds/remove/row/:rowId?label=label</span>
+            </InfosTitle>
+            <InfosNotice>O usuário precisa de um token</InfosNotice>
+            <InfosText>Deleta uma linha da tabela.</InfosText>
+            <InfosContent>{`${BASE_URL}/cruds/remove/row/:rowId?label=${label}`}</InfosContent>
+            <Spacer height={"20"} />
+
+            <InfosTitle>Token</InfosTitle>
+            <InfosContent>{`Bearer ${user.token}`}</InfosContent>
+          </InfosBody>
+        </>
+      );
+    }
+
     return (
       <>
         <Header>
@@ -419,6 +536,7 @@ export const Cruds = (props) => {
             onCreateRow: handleCreateRow,
             onUpdateRow: handleUpdateRow,
             onDeleteRow: handleDeleteRow,
+            onShowInfos: handleShowInfos,
           }}
         />
       </Container>

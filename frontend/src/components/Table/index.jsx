@@ -21,6 +21,7 @@ import {
 
 import { Loading as LoadingComponent } from "./../Loading";
 import { IoMdTrash, IoMdCreate } from "react-icons/io";
+import { GrConnect } from "react-icons/gr";
 
 export const Table = (props) => {
   const {
@@ -147,9 +148,25 @@ export const Table = (props) => {
             onClick={actions.onDeleteColumn}
           >
             <MenuBarItemIcon>
-              <IoMdTrash title="Deletar colun" height={50} width={50} />
+              <IoMdTrash title="Deletar coluna" height={50} width={50} />
             </MenuBarItemIcon>
             <span>Deletar coluna</span>
+          </MenuBarItem>
+
+          <MenuBarItem
+            background="#7f8c8d"
+            color="#ecf0f1"
+            onClick={actions.onShowInfos}
+          >
+            <MenuBarItemIcon>
+              <GrConnect
+                title="Conectar-se"
+                color="#ecf0f1"
+                height={40}
+                width={40}
+              />
+            </MenuBarItemIcon>
+            <span>Conectar</span>
           </MenuBarItem>
         </MenuBarContainer>
       </MenuBar>

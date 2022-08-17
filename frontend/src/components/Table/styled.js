@@ -236,6 +236,7 @@ export const MenuBarItemIcon = styled.div`
   justify-content: center;
   height: 100%;
   margin-right: 5px;
+  color: #ecf0f1;
 
   > svg {
     width: 25px;
