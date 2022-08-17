@@ -12,7 +12,7 @@ export const Container = styled.div`
 `;
 
 export const Spacer = styled.div`
-  width: ${(props) => (props.width ? props.width : "100%")};
+  width: ${(props) => (props.width ? props.width + "px" : "100%")};
   height: ${(props) => (props.height ? props.height : "0")}px;
 `;
 

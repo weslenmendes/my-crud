@@ -7,6 +7,7 @@ import {
   Header,
   Button,
   ButtonCrud,
+  Spacer,
 } from "./styled.js";
 
 import { Table } from "../../components/Table";
@@ -92,6 +93,7 @@ export const Home = (props) => {
 
   return (
     <>
+      <Spacer height={100} />
       <Subtitle>Seus Cruds</Subtitle>
       <Container>
         {table.data && (
