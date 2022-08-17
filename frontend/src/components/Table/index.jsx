@@ -80,7 +80,7 @@ export const Table = (props) => {
                   justifyContent=""
                   width={"20%"}
                 >
-                  <ButtonCrud onClick={() => showOptions(row)}>
+                  <ButtonCrud onClick={() => actions.onUpdateRow(columns, row)}>
                     <IoMdCreate />
                   </ButtonCrud>
                   <Spacer width={"10px"} />

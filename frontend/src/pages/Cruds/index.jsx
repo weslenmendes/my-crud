@@ -9,6 +9,7 @@ import {
   createColumn,
   deleteColumn,
   createRow,
+  updateRow,
   deleteRow,
 } from "../../services/crudServices.js";
 
@@ -47,6 +48,9 @@ export const Cruds = (props) => {
   const [modalType, setModalType] = useState("");
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const [columns, setColumns] = useState([]);
+  const [formEditRow, setFormEditRow] = useState({});
+  const [row, setRow] = useState({});
   const navigate = useNavigate();
   const { label } = useParams();
 
@@ -81,11 +85,19 @@ export const Cruds = (props) => {
 
   const handleOpenModal = () => {
     setName("");
+    setLoading(false);
     setModalOpen(!modalOpen);
   };
 
   const handleChange = (e) => {
     setName(e.target.value);
+  };
+
+  const handleChangeForm = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setFormEditRow({ ...formEditRow, [name]: value });
   };
 
   const reloadTable = () => {
@@ -97,13 +109,23 @@ export const Cruds = (props) => {
 
     setLoading(true);
 
-    const data = CreateColumnSchema.validate({ columnName: name });
+    let data = null;
 
-    if (data.error) {
+    if (modalType !== "Editar linha") {
+      data = CreateColumnSchema.validate({ columnName: name });
+    }
+
+    if (data?.error) {
       notify(data.error.message, "error");
+      setLoading(false);
     } else {
       if (modalType === "Deletar coluna") {
         await confirmDeleteColumn();
+        return;
+      }
+
+      if (modalType === "Editar linha") {
+        await editRow();
         return;
       }
 
@@ -118,6 +140,8 @@ export const Cruds = (props) => {
       } catch (e) {
         setLoading(false);
         notify(e.response.data.message, "error");
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -198,6 +222,24 @@ export const Cruds = (props) => {
     }
   };
 
+  const handleUpdateRow = (columns, row) => {
+    const keys = columns?.map(({ title }) => title);
+
+    const form = keys?.reduce((acc, curr) => {
+      acc[curr] = row[curr] || "";
+      return acc;
+    }, {});
+
+    delete form["Actions"];
+
+    setColumns(columns);
+    setRow(row);
+    setFormEditRow(form);
+
+    setModalType("Editar linha");
+    handleOpenModal();
+  };
+
   const handleDeleteRow = async (rowId) => {
     try {
       const confirm = await swal.fire({
@@ -225,42 +267,89 @@ export const Cruds = (props) => {
     }
   };
 
-  const generateLabel = (typeModal) => {
-    if (typeModal === "Criar coluna") {
-      return "Nome da coluna";
-    }
+  const editRow = async () => {
+    try {
+      const rowData = { ...formEditRow };
 
-    if (typeModal === "Criar linha") {
-      return "Nome da linha";
+      delete rowData["Actions"];
+      delete rowData["id"];
+
+      await updateRow(row["id"], label, rowData);
+
+      notify("Linha editada com sucesso!", "success");
+
+      setLoading(false);
+      handleOpenModal();
+      reloadTable();
+    } catch (e) {
+      setLoading(false);
+      notify(e.response.data.message, "error");
     }
   };
 
-  return (
-    <>
-      <Subtitle>{label}</Subtitle>
-      <Container>
-        <Table
-          columns={crud.columns}
-          data={crud.data}
-          loading={crud.loading}
-          openModal={handleOpenModal}
-          showEdit={true}
-          showDelete={true}
-          showOptions={true}
-          actions={{
-            onDelete: handleDelete,
-            onCreateColumn: handleCreateColumn,
-            onDeleteColumn: handleDeleteColumn,
-            onCreateRow: handleCreateRow,
-            onDeleteRow: handleDeleteRow,
-          }}
-        />
-      </Container>
-      <Modal
-        isOpen={modalOpen}
-        onRequestClose={handleOpenModal}
-        contentLabel={"Modal"}
-      >
+  const createForm = () => {
+    if (modalType === "Editar linha") {
+      const formatedColumns = columns.map((column) => {
+        if (column.title === "Actions" || column.title === "id") {
+          return null;
+        }
+
+        return { type: "text", name: column.title };
+      });
+
+      return (
+        <>
+          <Header>
+            <ModalSubtitle>{modalType}</ModalSubtitle>
+            <IoMdClose
+              width={50}
+              height={50}
+              title="Fechar"
+              onClick={handleOpenModal}
+            />
+          </Header>
+
+          <form onSubmit={(e) => handleSubmit(e, modalType)}>
+            {formatedColumns?.map((column, index) => {
+              if (!column) {
+                return;
+              }
+
+              return (
+                <Input
+                  key={index}
+                  id={column?.name}
+                  type={column?.type || "text"}
+                  value={formEditRow[column?.name]}
+                  onChange={(e) => handleChangeForm(e)}
+                  name={column?.name}
+                  placeholder={column?.name}
+                  label={column?.name}
+                  disabled={loading}
+                />
+              );
+            })}
+
+            <Button type="submit" disabled={loading}>
+              {loading ? (
+                <Loading width={"50"} height={"50"} color={"#e3e3e3"} />
+              ) : (
+                <span>
+                  {modalType === "Editar linha"
+                    ? "Atualizar"
+                    : modalType === "Deletar coluna"
+                    ? "Deletar"
+                    : "Criar"}
+                </span>
+              )}
+            </Button>
+          </form>
+        </>
+      );
+    }
+
+    return (
+      <>
         <Header>
           <ModalSubtitle>{modalType}</ModalSubtitle>
           <IoMdClose
@@ -295,6 +384,48 @@ export const Cruds = (props) => {
             )}
           </Button>
         </form>
+      </>
+    );
+  };
+
+  const generateLabel = (typeModal) => {
+    if (typeModal === "Criar coluna") {
+      return "Nome da coluna";
+    }
+
+    if (typeModal === "Criar linha") {
+      return "Nome da linha";
+    }
+  };
+
+  return (
+    <>
+      <Subtitle>{label}</Subtitle>
+      <Container>
+        <Table
+          columns={crud.columns}
+          data={crud.data}
+          loading={crud.loading}
+          openModal={handleOpenModal}
+          showEdit={true}
+          showDelete={true}
+          showOptions={true}
+          actions={{
+            onDelete: handleDelete,
+            onCreateColumn: handleCreateColumn,
+            onDeleteColumn: handleDeleteColumn,
+            onCreateRow: handleCreateRow,
+            onUpdateRow: handleUpdateRow,
+            onDeleteRow: handleDeleteRow,
+          }}
+        />
+      </Container>
+      <Modal
+        isOpen={modalOpen}
+        onRequestClose={handleOpenModal}
+        contentLabel={"Modal"}
+      >
+        {createForm()}
       </Modal>
     </>
   );
