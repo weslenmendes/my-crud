@@ -34,3 +34,8 @@ export const createRow = (label) => {
   const url = "cruds/create/row";
   return api.post(url, { label });
 };
+
+export const deleteRow = (label, rowId) => {
+  const url = `cruds/remove/row/${rowId}?label=${label}`;
+  return api.delete(url);
+};

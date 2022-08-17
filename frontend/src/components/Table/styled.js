@@ -7,12 +7,17 @@ export const TableContainer = styled.div`
   justify-content: center;
   width: 100%;
   overflow-x: auto;
+  min-width: 250px;
 
   margin-top: 50px;
   border-radius: 5px;
   height: max-content;
 
   background-color: #e3e3e3;
+`;
+
+export const Spacer = styled.div`
+  width: ${(props) => props.width || "100%"};
 `;
 
 export const TableHeader = styled.div`
@@ -53,7 +58,8 @@ export const TableRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  text-align: center;
+  justify-content: space-between;
   width: 100%;
   height: 100%;
   margin: 10px 0px;
@@ -61,9 +67,11 @@ export const TableRow = styled.div`
 
 export const TableCell = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(props) =>
+    props.flexDirection ? props.flexDirection : "column"};
   align-items: center;
-  justify-content: center;
+  justify-content: ${(props) =>
+    props.justifyContent ? props.justifyContent : "center"};
   width: ${(props) => props.width};
   min-width: max-content;
   padding: 0 10px;
@@ -141,7 +149,7 @@ export const ButtonCrud = styled.button`
   font-size: 16px;
   font-weight: 700;
   padding: 5px 10px;
-  background-color: #40739e;
+  background-color: ${(props) => props.backgroundColor || "#40739e"};
   cursor: pointer;
 
   display: flex;
@@ -149,7 +157,7 @@ export const ButtonCrud = styled.button`
   justify-content: center;
 
   &:hover {
-    background-color: #3c6e8f;
+    filter: brightness(0.9);
   }
 
   &:disabled {

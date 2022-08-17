@@ -9,6 +9,7 @@ import {
   createColumn,
   deleteColumn,
   createRow,
+  deleteRow,
 } from "../../services/crudServices.js";
 
 import { Table } from "../../components/Table";
@@ -57,14 +58,21 @@ export const Cruds = (props) => {
           const columns = crud.data[0]
             ? formatColumns(Object.keys(crud.data[0]))
             : [];
+          let actionsColumn = null;
+
+          if (columns) {
+            const lastColumnId = columns[columns.length - 1]["id"];
+            actionsColumn = { id: lastColumnId + 1, title: "Actions" };
+          }
 
           setCrud({
             ...crud,
             data: [...crud.data],
             loading: false,
-            columns: columns,
+            columns: [...columns, actionsColumn],
           });
         } catch (e) {
+          console.log(e);
           notify(e.response.data.message, "error");
         }
       })();
@@ -190,6 +198,33 @@ export const Cruds = (props) => {
     }
   };
 
+  const handleDeleteRow = async (rowId) => {
+    try {
+      const confirm = await swal.fire({
+        title: "Você tem certeza?",
+        text: `Você quer deletar a linha ${rowId}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+      });
+
+      if (confirm.isConfirmed) {
+        await deleteRow(label, rowId);
+
+        notify("Linha deletada com sucesso!", "success");
+
+        setLoading(false);
+        reloadTable();
+      }
+    } catch (e) {
+      setLoading(false);
+      notify(e.response.data.message, "error");
+    }
+  };
+
   const generateLabel = (typeModal) => {
     if (typeModal === "Criar coluna") {
       return "Nome da coluna";
@@ -217,6 +252,7 @@ export const Cruds = (props) => {
             onCreateColumn: handleCreateColumn,
             onDeleteColumn: handleDeleteColumn,
             onCreateRow: handleCreateRow,
+            onDeleteRow: handleDeleteRow,
           }}
         />
       </Container>

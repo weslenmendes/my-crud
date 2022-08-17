@@ -10,11 +10,13 @@ import {
   Loading,
   CallToAction,
   Button,
+  ButtonCrud,
   MenuBar,
   MenuBarContainer,
   MenuBarItem,
   MenuBarItemIcon,
   Container,
+  Spacer,
 } from "./styled.js";
 
 import { Loading as LoadingComponent } from "./../Loading";
@@ -65,14 +67,35 @@ export const Table = (props) => {
           {columns.map((column) => {
             if (column.title === "id")
               return (
-                <TableCell key={column.title} width={"20%"}>
+                <TableCell key={column.title} width={actions ? "13%" : "16%"}>
                   {row[column.title]}
                 </TableCell>
               );
 
+            if (column.title === "Actions")
+              return (
+                <TableCell
+                  key={column.title}
+                  flexDirection="row"
+                  justifyContent=""
+                  width={"20%"}
+                >
+                  <ButtonCrud onClick={() => showOptions(row)}>
+                    <IoMdCreate />
+                  </ButtonCrud>
+                  <Spacer width={"10px"} />
+                  <ButtonCrud
+                    backgroundColor="#c0392b"
+                    onClick={() => actions.onDeleteRow(row.id)}
+                  >
+                    <IoMdTrash />
+                  </ButtonCrud>
+                </TableCell>
+              );
+
             return (
-              <TableCell key={column.id} width={"100%"}>
-                {row[column.title]}
+              <TableCell key={column.title} width={actions ? "50%" : "80%"}>
+                {row[column.title] || "-"}
               </TableCell>
             );
           })}
@@ -142,6 +165,13 @@ export const Table = (props) => {
             if (column.title === "id")
               return (
                 <TableHeaderCell key={column.id} width="20%">
+                  {column.title}
+                </TableHeaderCell>
+              );
+
+            if (column.title === "Actions")
+              return (
+                <TableHeaderCell key={column.id} width="35%">
                   {column.title}
                 </TableHeaderCell>
               );
