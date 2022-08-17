@@ -17,7 +17,7 @@ const messages = {
 
 export const createCrudSchema: ISchema = {
   schema: Joi.object().keys({
-    label: Joi.string().pattern(regex.NAME).required().messages({
+    label: Joi.string().pattern(regex.LABEL).required().messages({
       "string.notEmpty": messages.label,
       "string.pattern.base": messages.labelPattern,
     }),
@@ -42,8 +42,8 @@ export const createColumnSchema: ISchema = {
 export const createRowSchema: ISchema = {
   schema: Joi.object().keys({
     label: Joi.string().pattern(regex.LABEL).required().messages({
-      "string.notEmpty": messages.id,
-      "string.pattern.base": messages.idPattern,
+      "string.notEmpty": messages.label,
+      "string.pattern.base": messages.labelPattern,
     }),
   }),
   local: "body",
