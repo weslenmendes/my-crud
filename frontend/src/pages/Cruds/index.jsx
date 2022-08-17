@@ -30,6 +30,7 @@ import {
   Header,
   Button,
   ButtonCrud,
+  Spacer,
 } from "./styled.js";
 
 import { formatColumns } from "../../utils/formatUtils.js";
@@ -400,6 +401,7 @@ export const Cruds = (props) => {
 
   return (
     <>
+      <Spacer height={100} />
       <Subtitle>{label}</Subtitle>
       <Container>
         <Table

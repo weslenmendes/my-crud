@@ -10,6 +10,12 @@ export const Container = styled.div`
   height: 100%;
   margin: 0 auto;
   min-width: 280px;
+  margin-top: 100px;
+`;
+
+export const Spacer = styled.div`
+  width: ${(props) => (props.width ? props.width : "100%")};
+  height: ${(props) => (props.height ? props.height : "0")}px;
 `;
 
 export const Subtitle = styled.div`

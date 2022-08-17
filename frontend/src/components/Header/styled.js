@@ -7,6 +7,10 @@ export const Container = styled.div`
   background-color: #1a202c;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 `;
 
 export const ActionsContainer = styled.div`

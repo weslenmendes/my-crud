@@ -11,6 +11,11 @@ export const Container = styled.div`
   min-width: 280px;
 `;
 
+export const Spacer = styled.div`
+  width: ${(props) => (props.width ? props.width : "100%")};
+  height: ${(props) => (props.height ? props.height : "0")}px;
+`;
+
 export const Subtitle = styled.div`
   display: flex;
   flex-direction: column;
