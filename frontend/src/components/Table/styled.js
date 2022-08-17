@@ -22,6 +22,8 @@ export const TableHeader = styled.div`
   width: 100%;
   height: 100%;
   padding: 20px 0;
+
+  border-bottom: 2px solid #ccc;
 `;
 
 export const TableHeaderCell = styled.div`
@@ -160,13 +162,32 @@ export const MenuBar = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  width: 80%;
+  justify-content: center;
+  width: 100%;
   height: 100%;
-  padding: 20px;
-  max-width: 600px;
   border-radius: 5px;
   background-color: #e3e3e3;
+  overflow-x: auto;
+`;
+
+export const MenuBarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: max-content;
+  height: 100%;
+  padding: 20px;
+  max-width: 100%;
+  border-radius: 5px;
+  background-color: #e3e3e3;
+
+  @media screen and (max-width: 600px) {
+    margin-right: 0;
+
+    justify-content: space-between;
+    min-width: 200px;
+  }
 `;
 
 export const MenuBarItem = styled.button`
@@ -212,4 +233,14 @@ export const MenuBarItemIcon = styled.div`
     width: 25px;
     height: 25px;
   }
+`;
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 `;

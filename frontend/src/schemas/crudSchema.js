@@ -21,3 +21,17 @@ export const CreateCrudSchema = Joi.object().keys({
     "string.pattern.base": messages.labelPattern,
   }),
 });
+
+export const CreateColumnSchema = Joi.object().keys({
+  columnName: Joi.string().pattern(regex.COLUMN_NAME).required().messages({
+    "string.notEmpty": messages.columnName,
+    "string.pattern.base": messages.columnNamePattern,
+  }),
+});
+
+export const CreateRowSchema = Joi.object().keys({
+  label: Joi.string().pattern(regex.LABEL).required().messages({
+    "string.notEmpty": messages.label,
+    "string.pattern.base": messages.labelPattern,
+  }),
+});

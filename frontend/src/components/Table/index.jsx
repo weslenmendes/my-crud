@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   TableContainer,
@@ -11,12 +11,14 @@ import {
   CallToAction,
   Button,
   MenuBar,
+  MenuBarContainer,
   MenuBarItem,
   MenuBarItemIcon,
+  Container,
 } from "./styled.js";
 
 import { Loading as LoadingComponent } from "./../Loading";
-import { IoMdTrash } from "react-icons/io";
+import { IoMdTrash, IoMdCreate } from "react-icons/io";
 
 export const Table = (props) => {
   const {
@@ -25,9 +27,10 @@ export const Table = (props) => {
     loading,
     openModal,
     showOptions,
-    onDelete,
+    actions,
   } = props;
   const navigate = useNavigate();
+  const location = useLocation();
 
   const createContent = () => {
     if (loading) {
@@ -53,7 +56,11 @@ export const Table = (props) => {
       return (
         <TableRow
           key={row.id}
-          onClick={() => navigate(`/cruds/${row["label"]}`)}
+          onClick={
+            location.pathname.includes("/cruds")
+              ? null
+              : () => navigate(`/cruds/${row["label"]}`)
+          }
         >
           {columns.map((column) => {
             if (column.title === "id")
@@ -77,18 +84,57 @@ export const Table = (props) => {
   const createOptions = () => {
     return (
       <MenuBar>
-        <MenuBarItem background="#c0392b" color="#ecf0f1" onClick={onDelete}>
-          <MenuBarItemIcon>
-            <IoMdTrash title="Deletar tabela" height={50} width={50} />
-          </MenuBarItemIcon>
-          <span>Deletar tabela</span>
-        </MenuBarItem>
+        <MenuBarContainer>
+          <MenuBarItem
+            background="#c0392b"
+            color="#ecf0f1"
+            onClick={actions.onDelete}
+          >
+            <MenuBarItemIcon>
+              <IoMdTrash title="Deletar tabela" height={50} width={50} />
+            </MenuBarItemIcon>
+            <span>Deletar tabela</span>
+          </MenuBarItem>
+
+          <MenuBarItem
+            background="#3498db"
+            color="#ecf0f1"
+            onClick={actions.onCreateColumn}
+          >
+            <MenuBarItemIcon>
+              <IoMdCreate title="Criar coluna" height={50} width={50} />
+            </MenuBarItemIcon>
+            <span>Criar coluna</span>
+          </MenuBarItem>
+
+          <MenuBarItem
+            background="#3498db"
+            color="#ecf0f1"
+            onClick={actions.onCreateRow}
+          >
+            <MenuBarItemIcon>
+              <IoMdCreate title="Criar linha" height={50} width={50} />
+            </MenuBarItemIcon>
+            <span>Criar Linha</span>
+          </MenuBarItem>
+
+          <MenuBarItem
+            background="#c0392b"
+            color="#ecf0f1"
+            onClick={actions.onDeleteColumn}
+          >
+            <MenuBarItemIcon>
+              <IoMdTrash title="Deletar colun" height={50} width={50} />
+            </MenuBarItemIcon>
+            <span>Deletar coluna</span>
+          </MenuBarItem>
+        </MenuBarContainer>
       </MenuBar>
     );
   };
 
   return (
-    <>
+    <Container>
       {showOptions && createOptions()}
       <TableContainer>
         <TableHeader>
@@ -109,6 +155,6 @@ export const Table = (props) => {
         </TableHeader>
         <TableBody>{createContent()}</TableBody>
       </TableContainer>
-    </>
+    </Container>
   );
 };
